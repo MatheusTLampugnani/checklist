@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Veículos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .status-checkbox {
+            text-align: center;
+        }
+        .submit-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checklist de Veículos</h1>
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th class="status-checkbox">Bom</th>
+                    <th class="status-checkbox">Regular</th>
+                    <th class="status-checkbox">Ruim</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.description }}</td>
+                    <td class="status-checkbox">
+                        <input type="radio" name="status_{{ item.id }}" value="bom" {% if item.status == 'bom' %}checked{% endif %}>
+                    </td>
+                    <td class="status-checkbox">
+                        <input type="radio" name="status_{{ item.id }}" value="regular" {% if item.status == 'regular' %}checked{% endif %}>
+                    </td>
+                    <td class="status-checkbox">
+                        <input type="radio" name="status_{{ item.id }}" value="ruim" {% if item.status == 'ruim' %}checked{% endif %}>
+                    </td>
+                    <!-- Campo oculto para passar o item_id -->
+                    <input type="hidden" name="item_id_{{ item.id }}" value="{{ item.id }}">
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="submit-btn">Salvar</button>
+    </form>
+</body>
+</html>
