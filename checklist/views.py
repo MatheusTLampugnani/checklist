@@ -1,26 +1,34 @@
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .models import ChecklistItem
-from .forms import ChecklistItemForm
+from .models import ChecklistItem, ChecklistSession
 
+# Página inicial
+def index(request):
+    return render(request, 'index.html')
+
+# Checklist existente
 def checklist_view(request):
     items = ChecklistItem.objects.all()
 
     if request.method == 'POST':
-        # Para cada item no formulário, obtém o valor do status e o ID do item
-        for item in items:
-            item_id = request.POST.get(f'item_id_{item.id}')
-            status = request.POST.get(f'status_{item.id}')
-            
-            # Verifica se o item_id e o status são válidos
-            if item_id and status:
-                try:
-                    checklist_item = ChecklistItem.objects.get(id=item_id)
-                    checklist_item.status = status  # Atualiza o status do item
-                    checklist_item.save()  # Salva a mudança no banco de dados
-                except ChecklistItem.DoesNotExist:
-                    raise Http404("Item não encontrado")
+        # Coleta os dados do formulário
+        person_name = request.POST.get('person_name')
+        car_plate = request.POST.get('car_plate')
 
-        return redirect('checklist')  # Redireciona de volta para a página de checklist
+        if person_name and car_plate:
+            # Cria uma nova sessão de checklist
+            session = ChecklistSession.objects.create(
+                person_name=person_name,
+                car_plate=car_plate
+            )
+
+            # Atualiza os itens com os status escolhidos
+            for item in items:
+                status = request.POST.get(f'status_{item.id}')
+                if status:
+                    item.status = status
+                    item.save()
+
+            return redirect('checklist')
 
     return render(request, 'checklist.html', {'items': items})
