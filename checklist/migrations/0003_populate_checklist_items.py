@@ -55,7 +55,7 @@ def populate_checklist_items(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('checklist', '0001_initial'),  # Substitua 'xxxx_auto' pela última migração antes dessa
+        ('checklist', '0002_populate_checklist_items'),  # Substitua 'xxxx_auto' pela última migração antes dessa
     ]
 
     operations = [

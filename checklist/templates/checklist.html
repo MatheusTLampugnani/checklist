@@ -91,6 +91,13 @@
         .submit-btn:hover {
             background-color: #45a049;
         }
+        .textarea-observations {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        resize: vertical;
+        }
     </style>
 </head>
 <body>
@@ -104,10 +111,6 @@
             <p><strong>Data e Hora:</strong> {{ last_session.created_at|date:"d/m/Y H:i" }}</p>
             <p><strong>Nome:</strong> {{ last_session.person_name }}</p>
             <p><strong>Placa:</strong> {{ last_session.car_plate }}</p>
-        </div>
-        {% else %}
-        <div class="session-info">
-            <p><em>Nenhuma sessão criada ainda.</em></p>
         </div>
         {% endif %}
 
@@ -150,6 +153,11 @@
                     {% endfor %}
                 </tbody>
             </table>
+
+            <div>
+                <label for="observations">Observações:</label>
+                <textarea id="observations" name="observations" rows="4" placeholder="Digite observações ou comentários aqui..." class="textarea-observations"></textarea>
+            </div>
 
             <button type="submit" class="submit-btn">Salvar</button>
         </form>
