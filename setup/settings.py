@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,10 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-5yr&=f$l)kxb&&wvc@o3*r#sfz9f1$9d32!5t&o3mlgjuv1qq7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost', 'www.checklistapp.com', 'checklistapp.com']
 
 # Application definition
 
@@ -77,13 +77,14 @@ WSGI_APPLICATION = 'setup.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # Nome do banco de dados
-        'USER': 'postgres',  # Usuário criado no PostgreSQL
-        'PASSWORD': '22082003',  # Senha do usuário
-        'HOST': 'localhost',  # Host onde o PostgreSQL está rodando
-        'PORT': '5432',  # Porta padrão do PostgreSQL
+        'NAME': config('SUPABASE_DB_NAME'),
+        'USER': config('SUPABASE_DB_USER'),
+        'PASSWORD': config('SUPABASE_DB_PASSWORD'),
+        'HOST': config('SUPABASE_DB_HOST'),
+        'PORT': config('SUPABASE_DB_PORT', '6543'),
     }
 }
+
 
 
 
