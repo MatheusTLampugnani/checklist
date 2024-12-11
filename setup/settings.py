@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-5yr&=f$l)kxb&&wvc@o3*r#sfz9f1$9d32!5t&o3mlgjuv1qq7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost', 'www.checklistcarapp.com', 'checklistcarapp.com']
+ALLOWED_HOSTS = ['checklistcar.vercel.app']
 
 # Application definition
 
@@ -70,6 +70,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'setup.wsgi.application'
 
+SECURE_SSL_REDIRECT = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
