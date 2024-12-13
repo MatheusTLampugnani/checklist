@@ -73,6 +73,16 @@
             text-decoration: underline;
         }
 
+        .alert.alert-danger {
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            color: #a94442;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
         footer {
             position: absolute;
             bottom: 10px;
@@ -86,10 +96,16 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Usuário" required>
-            <input type="password" name="password" placeholder="Senha" required>
+            {{ form.as_p }}
             <button type="submit">Entrar</button>
         </form>
         <a href="{% url 'register' %}">Não possui uma conta? Registre-se</a>

@@ -92,41 +92,32 @@
             background-color: #45a049;
         }
         .textarea-observations {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        resize: vertical;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Checklist de Veículos</h1>
-
-        <!-- Informações da última sessão -->
         {% if last_session %}
         <div class="session-info">
             <p><strong>Última Sessão:</strong></p>
             <p><strong>Data e Hora:</strong> {{ last_session.created_at|date:"d/m/Y H:i" }}</p>
-            <p><strong>Nome:</strong> {{ last_session.person_name }}</p>
-            <p><strong>Placa:</strong> {{ last_session.car_plate }}</p>
+            <p><strong>Placa:</strong> {{ last_session.placa }}</p>
         </div>
         {% endif %}
 
         <form method="post">
             {% csrf_token %}
-            <!-- Dados do Carro e do Proprietário -->
             <div class="form-row">
-                <label for="person_name">Nome:</label>
-                <input type="text" id="person_name" name="person_name" placeholder="Digite o nome" required>
-            </div>
-            <div class="form-row">
-                <label for="car_plate">Placa:</label>
-                <input type="text" id="car_plate" name="car_plate" placeholder="Digite a placa" required>
+                <label for="car_plate">Placa do Veículo:</label>
+                <input type="text" id="car_plate" name="car_plate" placeholder="Ex.: ABC-1234" required>
             </div>
 
-            <!-- Checklist -->
             <table>
                 <thead>
                     <tr>
@@ -141,13 +132,16 @@
                     <tr>
                         <td>{{ item.description }}</td>
                         <td class="status-checkbox">
-                            <input type="radio" name="status_{{ item.id }}" value="bom">
+                            <input type="radio" id="status_bom_{{ item.id }}" name="status_{{ item.id }}" value="bom" required>
+                            <label for="status_bom_{{ item.id }}">Bom</label>
                         </td>
                         <td class="status-checkbox">
-                            <input type="radio" name="status_{{ item.id }}" value="regular">
+                            <input type="radio" id="status_regular_{{ item.id }}" name="status_{{ item.id }}" value="regular">
+                            <label for="status_regular_{{ item.id }}">Regular</label>
                         </td>
                         <td class="status-checkbox">
-                            <input type="radio" name="status_{{ item.id }}" value="ruim">
+                            <input type="radio" id="status_ruim_{{ item.id }}" name="status_{{ item.id }}" value="ruim">
+                            <label for="status_ruim_{{ item.id }}">Ruim</label>
                         </td>
                     </tr>
                     {% endfor %}
@@ -159,7 +153,7 @@
                 <textarea id="observations" name="observations" rows="4" placeholder="Digite observações ou comentários aqui..." class="textarea-observations"></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">Salvar</button>
+            <button type="submit" class="submit-btn">Salvar Checklist</button>
         </form>
     </div>
 </body>

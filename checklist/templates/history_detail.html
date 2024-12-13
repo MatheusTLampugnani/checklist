@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Checklist</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f4f4f4; color: #555; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        a { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
+        a:hover { color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Detalhes do Checklist</h1>
+    <p><strong>Placa do Carro:</strong> {{ group.car_plate }}</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Usuário</th>
+                <th>Item</th>
+                <th>Status</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detail in details %}
+            <tr>
+                <td>{{ detail.user.username }}</td>
+                <td>{{ detail.item.description }}</td>
+                <td>
+                    {% if detail.status == 'bom' %}
+                        <span style="color: green;">{{ detail.get_status_display }}</span>
+                    {% elif detail.status == 'regular' %}
+                        <span style="color: orange;">{{ detail.get_status_display }}</span>
+                    {% else %}
+                        <span style="color: red;">{{ detail.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ detail.created_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Nenhum detalhe disponível.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{% url 'history' %}">Voltar para a Lista</a>
+</body>
+</html>
