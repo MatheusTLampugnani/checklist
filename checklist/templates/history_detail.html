@@ -14,6 +14,8 @@
         tr:hover { background-color: #f1f1f1; }
         a { display: inline-block; margin-top: 20px; text-decoration: none; color: #007bff; }
         a:hover { color: #0056b3; }
+        .btn { padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; text-align: center; cursor: pointer; text-decoration: none; }
+        .btn:hover { background-color: #218838; }
     </style>
 </head>
 <body>
@@ -51,7 +53,8 @@
             {% endfor %}
         </tbody>
     </table>
-    
-    <a href="{% url 'history' %}">Voltar para a Lista</a>
+
+    <a href="{% url 'history' %}" class="btn">Voltar para a Lista</a>
+    <a href="{% url 'generate_pdf' group.id %}" class="btn">Gerar Relatório em PDF</a>
 </body>
 </html>

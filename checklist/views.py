@@ -5,6 +5,12 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm
 from .models import ChecklistItem, ChecklistDetail, ChecklistGroup
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from django.http import HttpResponse
+from datetime import datetime
 
 
 def index(request):
@@ -84,3 +90,51 @@ def user_login(request):
 def logout(request):
     auth.logout(request)
     return redirect('index')
+
+
+@login_required
+def generate_pdf(request, group_id):
+    group = get_object_or_404(ChecklistGroup, id=group_id, user=request.user)
+    
+    details = ChecklistDetail.objects.filter(group=group).select_related('item')
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="checklist_{group.car_plate}.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    styles = getSampleStyleSheet()
+    header = Paragraph(f'<strong>Relatório do Checklist: {group.car_plate}</strong>', styles['Title'])
+    elements.append(header)
+
+    data = [['Usuário', 'Item', 'Status', 'Data']]
+    for detail in details:
+        data.append([
+            detail.user.username,
+            detail.item.description,
+            detail.get_status_display(),
+            detail.created_at.strftime('%d/%m/%Y %H:%M')
+        ])
+
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),
+    ]))
+
+    elements.append(table)
+
+    footer = Paragraph(f'Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}', styles['Normal'])
+    elements.append(footer)
+
+    doc.build(elements)
+
+    return response

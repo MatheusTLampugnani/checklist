@@ -9,4 +9,5 @@ urlpatterns = [
     path('checklist/', views.checklist_view, name='checklist'),
     path('historico/', views.checklist_history, name='history'),
     path('historico/<int:group_id>', views.history_detail, name='history_detail'),
+    path('gerar-pdf/<int:group_id>/', views.generate_pdf, name='generate_pdf'),
 ]
