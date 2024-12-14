@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm
 from .models import ChecklistItem, ChecklistDetail, ChecklistGroup
 from reportlab.lib.pagesizes import letter
@@ -20,16 +21,13 @@ def index(request):
 @login_required
 def checklist_view(request):
     items = ChecklistItem.objects.all()
-
     if request.method == 'POST':
         car_plate = request.POST.get('car_plate')
-
         if car_plate:
             checklist_group = ChecklistGroup.objects.create(
                 car_plate=car_plate,
                 user=request.user
             )
-
             for item in items:
                 status = request.POST.get(f'status_{item.id}')
                 if status:
@@ -40,8 +38,7 @@ def checklist_view(request):
                         status=status,
                         group=checklist_group
                     )
-            return redirect('history')
-
+            return redirect('checklist')
     return render(request, 'checklist.html', {'items': items})
 
 
@@ -62,9 +59,12 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('index')
+            form.save()
+            messages.success(request, 'Cadastro realizado com sucesso! Faça login para acessar sua conta.')
+            return redirect('login')
+        for field, error in form.errors.items():
+            messages.error(request, f"{field.capitalize()}: {error.as_text()}")
+
     else:
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})

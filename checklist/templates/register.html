@@ -74,6 +74,13 @@
             text-decoration: underline;
         }
 
+        .register-container .password-info {
+            font-size: 12px;
+            color: #555;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
         footer {
             position: absolute;
             bottom: 10px;
@@ -93,9 +100,19 @@
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="password1" placeholder="Senha" required>
             <input type="password" name="password2" placeholder="Confirme a Senha" required>
+            <div class="password-info">
+                Sua senha deve conter pelo menos:
+                <ul>
+                    <li>8 caracteres</li>
+                    <li>Uma letra maiúscula</li>
+                    <li>Uma letra minúscula</li>
+                    <li>Um número</li>
+                    <li>Um caractere especial (!, @, #, etc.)</li>
+                </ul>
+            </div>
             <button type="submit">Registrar</button>
         </form>
         <a href="{% url 'login' %}">Já possui uma conta? Faça login</a>
     </div>
-    <footer>
-       
+</body>
+</html>
