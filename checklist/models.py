@@ -1,13 +1,11 @@
 from django.db import models
-from django.contrib.auth.models import User  # Importa o modelo de usuário do Django
-
+from django.contrib.auth.models import User 
 
 STATUS_CHOICES = [
     ('bom', 'Bom'),
     ('regular', 'Regular'),
     ('ruim', 'Ruim'),
 ]
-
 
 class ChecklistItem(models.Model):
     description = models.CharField(

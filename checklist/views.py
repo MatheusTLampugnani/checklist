@@ -18,7 +18,7 @@ def index(request):
     return render(request, 'index.html')
 
 
-@login_required
+@login_required(login_url='/login/')
 def checklist_view(request):
     items = ChecklistItem.objects.all()
     if request.method == 'POST':
@@ -38,17 +38,18 @@ def checklist_view(request):
                         status=status,
                         group=checklist_group
                     )
-            return redirect('checklist')
+            messages.success(request, 'Cadastro realizado com sucesso! Faça login para acessar sua conta.')
+            return redirect('index')
     return render(request, 'checklist.html', {'items': items})
 
 
-@login_required
+@login_required(login_url='/login/')
 def checklist_history(request):
     groups = ChecklistGroup.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'history.html', {'groups': groups})
 
 
-@login_required
+@login_required(login_url='/login/')
 def history_detail(request, group_id):
     group = get_object_or_404(ChecklistGroup, id=group_id, user=request.user)
     details = ChecklistDetail.objects.filter(group=group).select_related('item')
@@ -86,13 +87,13 @@ def user_login(request):
     return render(request, 'login.html', {'form': form})
 
 
-@login_required
+@login_required(login_url='/login/')
 def logout(request):
     auth.logout(request)
     return redirect('index')
 
 
-@login_required
+@login_required(login_url='/login/')
 def generate_pdf(request, group_id):
     group = get_object_or_404(ChecklistGroup, id=group_id, user=request.user)
     

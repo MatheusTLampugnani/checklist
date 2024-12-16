@@ -86,9 +86,27 @@
             font-size: 16px;
             cursor: pointer;
             display: block;
+            text-align: center;
+            text-decoration: none;
             width: 100%;
         }
-        .submit-btn:hover {
+        .back-btn {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .submit-btn:hover, .back-btn:hover {
             background-color: #45a049;
         }
         .textarea-observations {
@@ -147,14 +165,13 @@
                     {% endfor %}
                 </tbody>
             </table>
-
             <div>
                 <label for="observations">Observações:</label>
                 <textarea id="observations" name="observations" rows="4" placeholder="Digite observações ou comentários aqui..." class="textarea-observations"></textarea>
             </div>
-
             <button type="submit" class="submit-btn">Salvar Checklist</button>
         </form>
+        <a href="{% url 'index' %}" class="back-btn">Voltar ao Início</a>
     </div>
 </body>
 </html>
