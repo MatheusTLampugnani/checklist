@@ -105,7 +105,12 @@
         {% endif %}
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            {{ form.as_p }}
+            <label for="username">Usuário ou E-mail:</label>
+            <input type="text" id="username" name="username" placeholder="Digite seu usuário ou e-mail" required>
+            
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            
             <button type="submit">Entrar</button>
         </form>
         <a href="{% url 'register' %}">Não possui uma conta? Registre-se</a>
