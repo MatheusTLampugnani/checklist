@@ -34,7 +34,7 @@ class ChecklistGroup(models.Model):
         verbose_name="Placa do Carro"
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,  # Referencia o modelo de usuário customizado
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE, 
         related_name='checklist_groups', 
         verbose_name='Usuário'

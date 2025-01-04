@@ -56,9 +56,11 @@ class CustomUserCreationForm(UserCreationForm):
 
     def clean_username(self):
         username = self.cleaned_data['username']
-        if not username.strip():
+        username = username.strip()
+        if not username:
             raise forms.ValidationError("O nome de usuário não pode estar vazio.")
-        return username.strip()
+        
+        return username
 
     def save(self, commit=True):
         user = super().save(commit=False)
