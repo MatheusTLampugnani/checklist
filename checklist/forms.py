@@ -1,6 +1,8 @@
 from django import forms
-from .models import ChecklistItem, ChecklistDetail, CustomUser
+from .models import ChecklistItem, ChecklistDetail
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
 
 class ChecklistItemForm(forms.ModelForm):
     class Meta:
@@ -12,6 +14,7 @@ class ChecklistItemForm(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+
 
 class ChecklistDetailForm(forms.ModelForm):
     class Meta:
@@ -30,6 +33,7 @@ class ChecklistDetailForm(forms.ModelForm):
             }),
         }
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
@@ -40,32 +44,39 @@ class CustomUserCreationForm(UserCreationForm):
             'class': 'form-control'
         }),
     )
-    username = forms.CharField(
+    
+    first_name = forms.CharField(
         required=True,
-        label="Nome de Usuário",
-        help_text="Escolha um nome de usuário (pode conter espaços).",
+        label="Nome",
         widget=forms.TextInput(attrs={
-            'placeholder': 'Digite seu nome de usuário',
+            'placeholder': 'Digite seu nome',
+            'class': 'form-control'
+        }),
+    )
+    
+    last_name = forms.CharField(
+        required=True,
+        label="Sobrenome",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Digite seu sobrenome',
             'class': 'form-control'
         }),
     )
 
     class Meta:
-        model = CustomUser
-        fields = ['username', 'email', 'password1', 'password2']
-
-    def clean_username(self):
-        username = self.cleaned_data['username']
-        username = username.strip()
-        if not username:
-            raise forms.ValidationError("O nome de usuário não pode estar vazio.")
-        
-        return username
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = self.cleaned_data['username']
-        user.email = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'placeholder': 'Digite seu usuário',
+                'class': 'form-control'
+            }),
+            'password1': forms.PasswordInput(attrs={
+                'placeholder': 'Digite sua senha',
+                'class': 'form-control'
+            }),
+            'password2': forms.PasswordInput(attrs={
+                'placeholder': 'Confirme sua senha',
+                'class': 'form-control'
+            }),
+        }

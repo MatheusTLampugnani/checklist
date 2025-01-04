@@ -37,7 +37,7 @@
             flex-direction: column;
         }
 
-        .login-container form input[type="email"],
+        .login-container form input[type="text"],
         .login-container form input[type="password"] {
             padding: 10px;
             margin-bottom: 15px;
@@ -96,16 +96,9 @@
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        {% if messages %}
-        <div class="alert alert-danger">
-            {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-        </div>
-        {% endif %}
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            <input type="email" id="email" name="email" placeholder="Digite seu E-mail" required>
+            <input type="text" id="username" name="username" placeholder="Digite seu Usuário" required>
             <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
             <button type="submit">Entrar</button>
         </form>

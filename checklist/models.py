@@ -1,21 +1,11 @@
 from django.db import models
-from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
 
 STATUS_CHOICES = [
     ('bom', 'Bom'),
     ('regular', 'Regular'),
     ('ruim', 'Ruim'),
 ]
-
-# Modelo do usuário personalizado
-class CustomUser(AbstractUser):
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        help_text="Nome de usuário.",
-    )
 
 # Classe dos itens do Checklist
 class ChecklistItem(models.Model):
@@ -27,6 +17,7 @@ class ChecklistItem(models.Model):
     def __str__(self):
         return self.description
 
+
 # Classe dos grupos dos Checklists
 class ChecklistGroup(models.Model):
     car_plate = models.CharField(
@@ -34,7 +25,7 @@ class ChecklistGroup(models.Model):
         verbose_name="Placa do Carro"
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User, 
         on_delete=models.CASCADE, 
         related_name='checklist_groups', 
         verbose_name='Usuário'
@@ -46,6 +37,7 @@ class ChecklistGroup(models.Model):
 
     def __str__(self):
         return f"Grupo: {self.car_plate} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
+
 
 # Classe do Checklist
 class ChecklistDetail(models.Model):
@@ -66,7 +58,7 @@ class ChecklistDetail(models.Model):
         verbose_name="Status do Item"
     )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        User, 
         on_delete=models.CASCADE, 
         related_name='checklist_details', 
         verbose_name='Usuário',
