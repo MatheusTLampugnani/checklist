@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -73,18 +73,23 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
             login(request, user)
-            return redirect('index')
+            next_url = request.GET.get('next', 'index')
+            return redirect(next_url)
         else:
-            messages.error(request, "Usuário ou senha inválidos.")
+            messages.error(request, "Email ou senha inválidos.")
     else:
         if request.GET.get('next'):
-            messages.error(request, "Você precisa estar logado para acessar essa página.")
-        form = AuthenticationForm()
+            messages.warning(request, "Você precisa estar logado para acessar essa página.")
+    
+    form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
+
 
 
 @login_required(login_url='/login/')
@@ -109,10 +114,9 @@ def generate_pdf(request, group_id):
     header = Paragraph(f'<strong>Relatório do Checklist: {group.car_plate}</strong>', styles['Title'])
     elements.append(header)
 
-    data = [['Usuário', 'Item', 'Status', 'Data']]
+    data = [['Item', 'Status', 'Data']]
     for detail in details:
         data.append([
-            detail.user.username,
             detail.item.description,
             detail.get_status_display(),
             detail.created_at.strftime('%d/%m/%Y %H:%M')

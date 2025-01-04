@@ -37,7 +37,7 @@
             flex-direction: column;
         }
 
-        .login-container form input[type="text"],
+        .login-container form input[type="email"],
         .login-container form input[type="password"] {
             padding: 10px;
             margin-bottom: 15px;
@@ -105,7 +105,8 @@
         {% endif %}
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
-            {{ form.as_p }}
+            <input type="email" id="email" name="email" placeholder="Digite seu E-mail" required>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
             <button type="submit">Entrar</button>
         </form>
         <a href="{% url 'register' %}">Não possui uma conta? Registre-se</a>
