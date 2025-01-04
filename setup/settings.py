@@ -123,3 +123,5 @@ AUTHENTICATION_BACKENDS = [
     'checklist.backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+AUTH_USER_MODEL = 'checklist.CustomUser'

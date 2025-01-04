@@ -1,7 +1,6 @@
 from django import forms
-from .models import ChecklistItem, ChecklistDetail
+from .models import ChecklistItem, ChecklistDetail, CustomUser
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 class ChecklistItemForm(forms.ModelForm):
     class Meta:
@@ -44,7 +43,7 @@ class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(
         required=True,
         label="Nome de Usuário",
-        help_text="Escolha um nome de usuário.",
+        help_text="Escolha um nome de usuário (pode conter espaços).",
         widget=forms.TextInput(attrs={
             'placeholder': 'Digite seu nome de usuário',
             'class': 'form-control'
@@ -52,8 +51,14 @@ class CustomUserCreationForm(UserCreationForm):
     )
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = ['username', 'email', 'password1', 'password2']
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not username.strip():
+            raise forms.ValidationError("O nome de usuário não pode estar vazio.")
+        return username.strip()
 
     def save(self, commit=True):
         user = super().save(commit=False)
