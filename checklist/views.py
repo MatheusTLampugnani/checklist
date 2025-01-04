@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -73,9 +73,10 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
             login(request, user)
             next_url = request.GET.get('next', 'index')
             return redirect(next_url)
@@ -84,9 +85,10 @@ def user_login(request):
     else:
         if request.GET.get('next'):
             messages.warning(request, "Você precisa estar logado para acessar essa página.")
-        form = CustomUserCreationForm()
-
+    
+    form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
+
 
 
 

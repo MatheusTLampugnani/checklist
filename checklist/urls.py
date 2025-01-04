@@ -2,9 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),  # Página inicial do checklist
-    path('login/', views.user_login, name='login'),  # Página de login (caso personalizada)
-    path('register/', views.register, name='register'),  # Página de registro
+    path('', views.index, name='index'),
+    path('login/', views.user_login, name='login'),
+    path('register/', views.register, name='register'),
     path('logout/', views.logout, name='logout'),
     path('checklist/', views.checklist_view, name='checklist'),
     path('historico/', views.checklist_history, name='history'),
