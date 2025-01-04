@@ -96,7 +96,7 @@
         <h1>Registrar Novo Usuário</h1>
         <form method="post" action="{% url 'register' %}">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Usuário - Sem espaço" required>
+            <input type="text" name="username" placeholder="Usuário" required>
             <input type="email" name="email" placeholder="E-mail" required>
             <input type="password" name="password1" placeholder="Senha" required>
             <input type="password" name="password2" placeholder="Confirme a Senha" required>
