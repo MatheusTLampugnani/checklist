@@ -41,24 +41,19 @@ class CustomUserCreationForm(UserCreationForm):
             'class': 'form-control'
         }),
     )
+    
+    username = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
 
     class Meta:
         model = User
         fields = ['email', 'password1', 'password2']
-        widgets = {
-            'password1': forms.PasswordInput(attrs={
-                'placeholder': 'Digite sua senha',
-                'class': 'form-control'
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'placeholder': 'Confirme sua senha',
-                'class': 'form-control'
-            }),
-        }
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.username = self.cleaned_data['email']  # Define o email como username
+        user.username = self.cleaned_data['email']
         if commit:
             user.save()
         return user
