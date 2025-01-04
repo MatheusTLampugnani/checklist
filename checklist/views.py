@@ -78,18 +78,14 @@ def user_login(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            next_url = request.GET.get('next', 'index')
-            return redirect(next_url)
+            return redirect('index')
         else:
             messages.error(request, "Email ou senha inválidos.")
     else:
         if request.GET.get('next'):
             messages.warning(request, "Você precisa estar logado para acessar essa página.")
     
-    form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
-
-
+    return render(request, 'login.html', {'form': AuthenticationForm()})
 
 
 @login_required(login_url='/login/')
