@@ -46,7 +46,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = ['username', 'email', 'password1', 'password2']
         widgets = {
-            'username': forms.TextInput(attrs={'placeholder': 'Digite seu nome de usuário','class': 'form-control'}),
+            'email': forms.TextInput(attrs={'placeholder': 'Digite seu emailc','class': 'form-control'}),
             'password1': forms.PasswordInput(attrs={'placeholder': 'Digite sua senha','class': 'form-control'}),
             'password2': forms.PasswordInput(attrs={'placeholder': 'Confirme sua senha','class': 'form-control'}),
         }
