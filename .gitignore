@@ -49,3 +49,6 @@ Thumbs.db
 nosetests.xml
 coverage.xml
 *.log
+
+
+settings.py

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 
 STATUS_CHOICES = [
     ('bom', 'Bom'),
@@ -7,6 +7,7 @@ STATUS_CHOICES = [
     ('ruim', 'Ruim'),
 ]
 
+# Classe dos itens do Checklist
 class ChecklistItem(models.Model):
     description = models.CharField(
         max_length=255, 
@@ -16,6 +17,8 @@ class ChecklistItem(models.Model):
     def __str__(self):
         return self.description
 
+
+# Classe dos grupos dos Checklists
 class ChecklistGroup(models.Model):
     car_plate = models.CharField(
         max_length=10, 
@@ -35,6 +38,8 @@ class ChecklistGroup(models.Model):
     def __str__(self):
         return f"Grupo: {self.car_plate} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
 
+
+# Classe do Checklist
 class ChecklistDetail(models.Model):
     car_plate = models.CharField(
         max_length=10, 

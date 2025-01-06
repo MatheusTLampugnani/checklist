@@ -3,6 +3,7 @@ from .models import ChecklistItem, ChecklistDetail
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+
 class ChecklistItemForm(forms.ModelForm):
     class Meta:
         model = ChecklistItem
@@ -13,6 +14,7 @@ class ChecklistItemForm(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+
 
 class ChecklistDetailForm(forms.ModelForm):
     class Meta:
@@ -31,29 +33,26 @@ class ChecklistDetailForm(forms.ModelForm):
             }),
         }
 
+
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(
+    first_name = forms.CharField(
         required=True,
-        label="Email",
-        help_text="Digite um endereço de email válido.",
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'Digite seu email',
+        label="Nome",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Digite seu nome',
             'class': 'form-control'
         }),
     )
     
-    username = forms.CharField(
-        required=False,
-        widget=forms.HiddenInput(),
+    last_name = forms.CharField(
+        required=True,
+        label="Sobrenome",
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Digite seu sobrenome',
+            'class': 'form-control'
+        }),
     )
 
     class Meta:
         model = User
-        fields = ['email', 'password1', 'password2']
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = self.cleaned_data['email']
-        if commit:
-            user.save()
-        return user
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
