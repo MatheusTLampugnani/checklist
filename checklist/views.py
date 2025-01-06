@@ -61,30 +61,27 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Cadastro realizado com sucesso! Faça login para acessar sua conta.')
+            messages.success(request, 'Cadastro realizado com sucesso!')
             return redirect('login')
-        for field, error in form.errors.items():
-            messages.error(request, f"{field.capitalize()}: {error.as_text()}")
-
+        else:
+            messages.error(request, 'Erro ao realizar o cadastro.')
     else:
         form = CustomUserCreationForm()
+
     return render(request, 'register.html', {'form': form})
 
 
 def user_login(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            next_url = request.GET.get('next', 'index')
-            return redirect(next_url)
+            return redirect('index')
         else:
-            messages.error(request, "Email ou senha inválidos.")
+            messages.error(request, "Usuário ou senha inválidos.")
     else:
-        if request.GET.get('next'):
-            messages.warning(request, "Você precisa estar logado para acessar essa página.")
-        form = CustomUserCreationForm()
+        form = AuthenticationForm()
 
     return render(request, 'login.html', {'form': form})
 

@@ -35,16 +35,6 @@ class ChecklistDetailForm(forms.ModelForm):
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(
-        required=True,
-        label="Email",
-        help_text="Digite um endereço de email válido.",
-        widget=forms.EmailInput(attrs={
-            'placeholder': 'Digite seu email',
-            'class': 'form-control'
-        }),
-    )
-    
     first_name = forms.CharField(
         required=True,
         label="Nome",
@@ -65,18 +55,4 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'password1', 'password2']
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'placeholder': 'Digite seu usuário',
-                'class': 'form-control'
-            }),
-            'password1': forms.PasswordInput(attrs={
-                'placeholder': 'Digite sua senha',
-                'class': 'form-control'
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'placeholder': 'Confirme sua senha',
-                'class': 'form-control'
-            }),
-        }
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']

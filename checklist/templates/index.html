@@ -57,6 +57,14 @@
         .btn-group .btn {
             margin: 0 5px;
         }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+            font-size: 12px;
+            color: #777;
+        }
     </style>
 </head>
 <body>
@@ -74,5 +82,8 @@
         <a href="{% url 'checklist' %}" class="btn">Acessar Checklist</a>
         <a href="{% url 'history' %}" class="btn">Ver Histórico</a>
     </div>
+    <footer>
+        &copy; {{ current_year }} Checklist de Veículos
+    </footer>
 </body>
 </html>
