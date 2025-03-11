@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 STATUS_CHOICES = [
     ('bom', 'Bom'),
@@ -34,9 +35,34 @@ class ChecklistGroup(models.Model):
         auto_now_add=True, 
         verbose_name="Data de Criação"
     )
+    status = models.CharField(
+        max_length=10, 
+        choices=[('Pendente', 'Pendente'), ('Liberado', 'Liberado'), ('Recusado', 'Recusado')], 
+        default='Pendente', 
+        verbose_name="Status do Checklist"
+    )
+    assinatura_token = models.UUIDField(
+        default=uuid.uuid4, 
+        unique=True, 
+        editable=False, 
+        verbose_name="Token de Assinatura"
+    )
+    assinatura_confirmada = models.BooleanField(
+        default=False, 
+        verbose_name="Assinatura Confirmada"
+    )
+
+    def confirmar_assinatura(self):
+        self.status = 'Liberado'
+        self.assinatura_confirmada = True
+        self.save()
+    
+    def recusar_assinatura(self):
+        self.status = 'Recusado'
+        self.save()
 
     def __str__(self):
-        return f"Grupo: {self.car_plate} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"
+        return f"Grupo: {self.car_plate} - {self.created_at.strftime('%d/%m/%Y %H:%M')} ({self.status})"
 
 
 # Classe do Checklist

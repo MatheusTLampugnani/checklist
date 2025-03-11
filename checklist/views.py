@@ -1,26 +1,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib.auth import login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import auth, messages
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .forms import CustomUserCreationForm
-from .models import ChecklistItem, ChecklistDetail, ChecklistGroup
+from django.http import HttpResponse
+from datetime import datetime
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
-from django.http import HttpResponse
-from datetime import datetime
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from .forms import CustomUserCreationForm
+from .models import ChecklistItem, ChecklistDetail, ChecklistGroup
+from .serializers import ChecklistItemSerializer, ChecklistGroupSerializer, ChecklistDetailSerializer
 
+# ---- Views baseadas em função (FBV) ----
 
 def index(request):
     return render(request, 'index.html')
 
-
 @login_required(login_url='/login/')
 def checklist_view(request):
     items = ChecklistItem.objects.all()
+    
     if request.method == 'POST':
         car_plate = request.POST.get('car_plate')
         if car_plate:
@@ -38,23 +42,21 @@ def checklist_view(request):
                         status=status,
                         group=checklist_group
                     )
-            messages.success(request, 'Cadastro realizado com sucesso! Faça login para acessar sua conta.')
-            return redirect('index')
-    return render(request, 'checklist.html', {'items': items})
+            messages.success(request, 'Checklist criado com sucesso!')
+            return redirect('history')
 
+    return render(request, 'checklist.html', {'items': items})
 
 @login_required(login_url='/login/')
 def checklist_history(request):
     groups = ChecklistGroup.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'history.html', {'groups': groups})
 
-
 @login_required(login_url='/login/')
 def history_detail(request, group_id):
     group = get_object_or_404(ChecklistGroup, id=group_id, user=request.user)
     details = ChecklistDetail.objects.filter(group=group).select_related('item')
     return render(request, 'history_detail.html', {'group': group, 'details': details})
-
 
 def register(request):
     if request.method == 'POST':
@@ -70,7 +72,6 @@ def register(request):
 
     return render(request, 'register.html', {'form': form})
 
-
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -85,18 +86,14 @@ def user_login(request):
 
     return render(request, 'login.html', {'form': form})
 
-
-
 @login_required(login_url='/login/')
 def logout(request):
-    auth.logout(request)
+    auth_logout(request)
     return redirect('index')
-
 
 @login_required(login_url='/login/')
 def generate_pdf(request, group_id):
     group = get_object_or_404(ChecklistGroup, id=group_id, user=request.user)
-    
     details = ChecklistDetail.objects.filter(group=group).select_related('item')
 
     response = HttpResponse(content_type='application/pdf')
@@ -135,7 +132,21 @@ def generate_pdf(request, group_id):
     footer = Paragraph(f'Gerado em: {datetime.now().strftime("%d/%m/%Y %H:%M:%S")}', styles['Normal'])
     elements.append(footer)
 
-    doc.build(elements)
-
+    doc.build(elements) 
     return response
 
+
+class ChecklistItemViewSet(viewsets.ModelViewSet):
+    queryset = ChecklistItem.objects.all()
+    serializer_class = ChecklistItemSerializer
+    permission_classes = [IsAuthenticated]
+
+class ChecklistGroupViewSet(viewsets.ModelViewSet):
+    queryset = ChecklistGroup.objects.all()
+    serializer_class = ChecklistGroupSerializer
+    permission_classes = [IsAuthenticated]
+
+class ChecklistDetailViewSet(viewsets.ModelViewSet):
+    queryset = ChecklistDetail.objects.all()
+    serializer_class = ChecklistDetailSerializer
+    permission_classes = [IsAuthenticated]
