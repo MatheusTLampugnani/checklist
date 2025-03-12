@@ -100,6 +100,7 @@
                     <th>Usuário</th>
                     <th>Data de Criação</th>
                     <th>Ações</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,6 +112,7 @@
                     <td>
                         <a href="{% url 'history_detail' group.id %}">Ver Detalhes</a>
                     </td>
+                    <td>{{ group.status}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
