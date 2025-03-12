@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Checklists Pendentes</h2>
+    <table>
+        <tr>
+            <th>Placa do Carro</th>
+            <th>Usuário</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+        {% for checklist in checklists %}
+        <tr>
+            <td>{{ checklist.car_plate }}</td>
+            <td>{{ checklist.user.username }}</td>
+            <td>{{ checklist.get_status_display }}</td>
+            <td>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="group_id" value="{{ checklist.id }}">
+                    <select name="new_status">
+                        <option value="Liberado">Liberado</option>
+                        <option value="Recusado">Recusado</option>
+                    </select>
+                    <button type="submit">Atualizar</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

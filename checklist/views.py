@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from datetime import datetime
@@ -150,3 +150,25 @@ class ChecklistDetailViewSet(viewsets.ModelViewSet):
     queryset = ChecklistDetail.objects.all()
     serializer_class = ChecklistDetailSerializer
     permission_classes = [IsAuthenticated]
+
+
+def is_admin(user):
+    return user.is_staff or user.is_superuser
+
+@login_required(login_url='/login/')
+@user_passes_test(is_admin)
+def admin_checklist_view(request):
+    checklists = ChecklistGroup.objects.filter(status='Pendente')
+
+    if request.method == 'POST':
+        group_id = request.POST.get('group_id')
+        new_status = request.POST.get('new_status')
+
+        group = get_object_or_404(ChecklistGroup, id=group_id)
+        group.status = new_status
+        group.save()
+
+        messages.success(request, f"Checklist {group_id} atualizado para {new_status}!")
+        return redirect('admin_checklist')  
+
+    return render(request, 'admin_checklist.html', {'checklists': checklists})

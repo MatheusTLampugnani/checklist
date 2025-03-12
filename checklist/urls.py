@@ -17,6 +17,8 @@ urlpatterns = [
     path('historico/', views.checklist_history, name='history'),
     path('historico/<int:group_id>/', views.history_detail, name='history_detail'),
     path('gerar-pdf/<int:group_id>/', views.generate_pdf, name='generate_pdf'),
+    path('admin-checklist/', views.admin_checklist_view, name='admin_checklist'),
+
 
     # Rotas da API REST
     path('api/', include(router.urls)),
